@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.8)
+project(rbkairos_moveit_config)
+
+find_package(ament_cmake REQUIRED)
+
+install(DIRECTORY config srdf launch DESTINATION share/${PROJECT_NAME})
+
+ament_package()

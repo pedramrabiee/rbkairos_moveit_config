@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SRDF for RB-Kairos+ mobile manipulator
+  - UR5e arm (6 DOF)
+  - Robotiq 2F-85 gripper
+
+  Uses virtual joint for mobile base (can be changed to fixed for stationary setup)
+
+  Author: Pedram Rabiee (prabiee@3laws.io)
+-->
+<robot name="rbkairos_plus_with_robotiq">
+
+  <!-- Virtual joint connecting world to robot base
+       - Use type="fixed" for arm-only planning (current)
+       - Use type="planar" for mobile base + arm coordinated planning (requires localization) -->
+  <virtual_joint name="virtual_joint" type="fixed" parent_frame="world" child_link="rbkairos_base_footprint"/>
+
+  <!-- Planning group for the arm (6 DOF UR5e) -->
+  <group name="arm">
+    <chain base_link="rbkairos_arm_base_link" tip_link="rbkairos_arm_tool0"/>
+  </group>
+
+  <!-- Planning group for the gripper -->
+  <group name="gripper">
+    <joint name="rbkairos_gripper_robotiq_85_left_knuckle_joint"/>
+  </group>
+
+  <!-- Define the end-effector attached to arm -->
+  <end_effector name="gripper_eef" parent_link="rbkairos_arm_tool0" group="gripper" parent_group="arm"/>
+
+  <!-- Named poses for arm -->
+  <group_state name="home" group="arm">
+    <joint name="rbkairos_arm_shoulder_pan_joint" value="0.0"/>
+    <joint name="rbkairos_arm_shoulder_lift_joint" value="-1.5708"/>
+    <joint name="rbkairos_arm_elbow_joint" value="1.5708"/>
+    <joint name="rbkairos_arm_wrist_1_joint" value="-1.5708"/>
+    <joint name="rbkairos_arm_wrist_2_joint" value="-1.5708"/>
+    <joint name="rbkairos_arm_wrist_3_joint" value="0.0"/>
+  </group_state>
+
+  <group_state name="ready" group="arm">
+    <joint name="rbkairos_arm_shoulder_pan_joint" value="0.0"/>
+    <joint name="rbkairos_arm_shoulder_lift_joint" value="-1.0"/>
+    <joint name="rbkairos_arm_elbow_joint" value="1.0"/>
+    <joint name="rbkairos_arm_wrist_1_joint" value="-1.5708"/>
+    <joint name="rbkairos_arm_wrist_2_joint" value="-1.5708"/>
+    <joint name="rbkairos_arm_wrist_3_joint" value="0.0"/>
+  </group_state>
+
+  <!-- Named poses for gripper -->
+  <group_state name="open" group="gripper">
+    <joint name="rbkairos_gripper_robotiq_85_left_knuckle_joint" value="0.0"/>
+  </group_state>
+
+  <group_state name="closed" group="gripper">
+    <joint name="rbkairos_gripper_robotiq_85_left_knuckle_joint" value="0.8"/>
+  </group_state>
+
+  <!-- ========================================== -->
+  <!-- SELF-COLLISION MATRIX                      -->
+  <!-- Generated for RB-Kairos+ with UR5e + Robotiq 2F-85 -->
+  <!-- ========================================== -->
+
+  <!-- Mobile Base Internal (all fixed, never move relative to each other) -->
+  <disable_collisions link1="rbkairos_base_footprint" link2="rbkairos_base_link" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_base_link" link2="rbkairos_top_cover" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_base_link" link2="rbkairos_base_logo_left" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_base_link" link2="rbkairos_base_logo_right" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_base_link" link2="rbkairos_base_logo_front" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_base_link" link2="rbkairos_base_logo_rear" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_base_link" link2="rbkairos_front_right_wheel_link" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_base_link" link2="rbkairos_front_left_wheel_link" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_base_link" link2="rbkairos_back_right_wheel_link" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_base_link" link2="rbkairos_back_left_wheel_link" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_top_cover" link2="rbkairos_base_logo_left" reason="Never"/>
+  <disable_collisions link1="rbkairos_top_cover" link2="rbkairos_base_logo_right" reason="Never"/>
+  <disable_collisions link1="rbkairos_top_cover" link2="rbkairos_base_logo_front" reason="Never"/>
+  <disable_collisions link1="rbkairos_top_cover" link2="rbkairos_base_logo_rear" reason="Never"/>
+
+  <!-- Arm Base to Mobile Base -->
+  <disable_collisions link1="rbkairos_arm_base_link" link2="rbkairos_top_cover" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_arm_base_link" link2="rbkairos_base_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_base_link_inertia" link2="rbkairos_top_cover" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_arm_base_link_inertia" link2="rbkairos_base_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_base_link" link2="rbkairos_arm_base_link_inertia" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_arm_base" link2="rbkairos_top_cover" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_base" link2="rbkairos_arm_base_link" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_arm_base" link2="rbkairos_arm_base_link_inertia" reason="Adjacent"/>
+
+  <!-- Arm Chain (Adjacent links) -->
+  <disable_collisions link1="rbkairos_arm_base_link" link2="rbkairos_arm_shoulder_link" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_arm_base_link_inertia" link2="rbkairos_arm_shoulder_link" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_arm_base" link2="rbkairos_arm_shoulder_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_shoulder_link" link2="rbkairos_arm_upper_arm_link" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_arm_upper_arm_link" link2="rbkairos_arm_forearm_link" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_arm_forearm_link" link2="rbkairos_arm_wrist_1_link" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_arm_wrist_1_link" link2="rbkairos_arm_wrist_2_link" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_arm_wrist_2_link" link2="rbkairos_arm_wrist_3_link" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_arm_wrist_3_link" link2="rbkairos_arm_flange" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_arm_flange" link2="rbkairos_arm_tool0" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_arm_wrist_3_link" link2="rbkairos_arm_tool0" reason="Adjacent"/>
+
+  <!-- Arm Links (Never collide - too far apart) -->
+  <disable_collisions link1="rbkairos_arm_base_link" link2="rbkairos_arm_upper_arm_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_base_link_inertia" link2="rbkairos_arm_upper_arm_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_shoulder_link" link2="rbkairos_arm_forearm_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_shoulder_link" link2="rbkairos_arm_wrist_1_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_wrist_1_link" link2="rbkairos_arm_wrist_3_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_wrist_1_link" link2="rbkairos_arm_flange" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_wrist_1_link" link2="rbkairos_arm_tool0" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_wrist_2_link" link2="rbkairos_arm_flange" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_wrist_2_link" link2="rbkairos_arm_tool0" reason="Never"/>
+
+  <!-- Gripper to Arm (tool0/flange to gripper) -->
+  <disable_collisions link1="rbkairos_arm_tool0" link2="rbkairos_gripper_adapter_ur_to_robotiq_link" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_arm_flange" link2="rbkairos_gripper_adapter_ur_to_robotiq_link" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_arm_wrist_3_link" link2="rbkairos_gripper_adapter_ur_to_robotiq_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_wrist_2_link" link2="rbkairos_gripper_adapter_ur_to_robotiq_link" reason="Never"/>
+
+  <!-- Gripper Internal Chain -->
+  <disable_collisions link1="rbkairos_gripper_adapter_ur_to_robotiq_link" link2="rbkairos_gripper_base_link" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_gripper_base_link" link2="rbkairos_gripper_robotiq_85_base_link" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_gripper_adapter_ur_to_robotiq_link" link2="rbkairos_gripper_robotiq_85_base_link" reason="Never"/>
+
+  <!-- Left Finger Chain -->
+  <disable_collisions link1="rbkairos_gripper_robotiq_85_base_link" link2="rbkairos_gripper_robotiq_85_left_knuckle_link" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_gripper_robotiq_85_left_knuckle_link" link2="rbkairos_gripper_robotiq_85_left_finger_link" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_gripper_robotiq_85_base_link" link2="rbkairos_gripper_robotiq_85_left_inner_knuckle_link" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_gripper_robotiq_85_left_inner_knuckle_link" link2="rbkairos_gripper_robotiq_85_left_finger_tip_link" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_gripper_robotiq_85_left_finger_link" link2="rbkairos_gripper_robotiq_85_left_finger_tip_link" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_gripper_robotiq_85_left_knuckle_link" link2="rbkairos_gripper_robotiq_85_left_inner_knuckle_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_gripper_robotiq_85_left_knuckle_link" link2="rbkairos_gripper_robotiq_85_left_finger_tip_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_gripper_robotiq_85_left_finger_link" link2="rbkairos_gripper_robotiq_85_left_inner_knuckle_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_gripper_robotiq_85_base_link" link2="rbkairos_gripper_robotiq_85_left_finger_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_gripper_robotiq_85_base_link" link2="rbkairos_gripper_robotiq_85_left_finger_tip_link" reason="Never"/>
+
+  <!-- Right Finger Chain -->
+  <disable_collisions link1="rbkairos_gripper_robotiq_85_base_link" link2="rbkairos_gripper_robotiq_85_right_knuckle_link" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_gripper_robotiq_85_right_knuckle_link" link2="rbkairos_gripper_robotiq_85_right_finger_link" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_gripper_robotiq_85_base_link" link2="rbkairos_gripper_robotiq_85_right_inner_knuckle_link" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_gripper_robotiq_85_right_inner_knuckle_link" link2="rbkairos_gripper_robotiq_85_right_finger_tip_link" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_gripper_robotiq_85_right_finger_link" link2="rbkairos_gripper_robotiq_85_right_finger_tip_link" reason="Adjacent"/>
+  <disable_collisions link1="rbkairos_gripper_robotiq_85_right_knuckle_link" link2="rbkairos_gripper_robotiq_85_right_inner_knuckle_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_gripper_robotiq_85_right_knuckle_link" link2="rbkairos_gripper_robotiq_85_right_finger_tip_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_gripper_robotiq_85_right_finger_link" link2="rbkairos_gripper_robotiq_85_right_inner_knuckle_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_gripper_robotiq_85_base_link" link2="rbkairos_gripper_robotiq_85_right_finger_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_gripper_robotiq_85_base_link" link2="rbkairos_gripper_robotiq_85_right_finger_tip_link" reason="Never"/>
+
+  <!-- Cross-finger (left-right never collide with each other in normal operation) -->
+  <disable_collisions link1="rbkairos_gripper_robotiq_85_left_knuckle_link" link2="rbkairos_gripper_robotiq_85_right_knuckle_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_gripper_robotiq_85_left_inner_knuckle_link" link2="rbkairos_gripper_robotiq_85_right_inner_knuckle_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_gripper_robotiq_85_left_knuckle_link" link2="rbkairos_gripper_robotiq_85_right_inner_knuckle_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_gripper_robotiq_85_right_knuckle_link" link2="rbkairos_gripper_robotiq_85_left_inner_knuckle_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_gripper_robotiq_85_left_finger_link" link2="rbkairos_gripper_robotiq_85_right_finger_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_gripper_robotiq_85_left_finger_link" link2="rbkairos_gripper_robotiq_85_right_knuckle_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_gripper_robotiq_85_right_finger_link" link2="rbkairos_gripper_robotiq_85_left_knuckle_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_gripper_robotiq_85_left_finger_link" link2="rbkairos_gripper_robotiq_85_right_inner_knuckle_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_gripper_robotiq_85_right_finger_link" link2="rbkairos_gripper_robotiq_85_left_inner_knuckle_link" reason="Never"/>
+
+  <!-- Gripper base/adapter to all finger links -->
+  <disable_collisions link1="rbkairos_gripper_base_link" link2="rbkairos_gripper_robotiq_85_left_knuckle_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_gripper_base_link" link2="rbkairos_gripper_robotiq_85_right_knuckle_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_gripper_base_link" link2="rbkairos_gripper_robotiq_85_left_finger_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_gripper_base_link" link2="rbkairos_gripper_robotiq_85_right_finger_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_gripper_base_link" link2="rbkairos_gripper_robotiq_85_left_inner_knuckle_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_gripper_base_link" link2="rbkairos_gripper_robotiq_85_right_inner_knuckle_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_gripper_base_link" link2="rbkairos_gripper_robotiq_85_left_finger_tip_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_gripper_base_link" link2="rbkairos_gripper_robotiq_85_right_finger_tip_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_gripper_adapter_ur_to_robotiq_link" link2="rbkairos_gripper_robotiq_85_left_knuckle_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_gripper_adapter_ur_to_robotiq_link" link2="rbkairos_gripper_robotiq_85_right_knuckle_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_gripper_adapter_ur_to_robotiq_link" link2="rbkairos_gripper_robotiq_85_left_finger_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_gripper_adapter_ur_to_robotiq_link" link2="rbkairos_gripper_robotiq_85_right_finger_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_gripper_adapter_ur_to_robotiq_link" link2="rbkairos_gripper_robotiq_85_left_inner_knuckle_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_gripper_adapter_ur_to_robotiq_link" link2="rbkairos_gripper_robotiq_85_right_inner_knuckle_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_gripper_adapter_ur_to_robotiq_link" link2="rbkairos_gripper_robotiq_85_left_finger_tip_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_gripper_adapter_ur_to_robotiq_link" link2="rbkairos_gripper_robotiq_85_right_finger_tip_link" reason="Never"/>
+
+  <!-- Wrist links to gripper (never reach) -->
+  <disable_collisions link1="rbkairos_arm_wrist_3_link" link2="rbkairos_gripper_base_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_wrist_3_link" link2="rbkairos_gripper_robotiq_85_base_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_wrist_3_link" link2="rbkairos_gripper_robotiq_85_left_knuckle_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_wrist_3_link" link2="rbkairos_gripper_robotiq_85_right_knuckle_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_wrist_3_link" link2="rbkairos_gripper_robotiq_85_left_finger_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_wrist_3_link" link2="rbkairos_gripper_robotiq_85_right_finger_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_wrist_3_link" link2="rbkairos_gripper_robotiq_85_left_inner_knuckle_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_wrist_3_link" link2="rbkairos_gripper_robotiq_85_right_inner_knuckle_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_wrist_3_link" link2="rbkairos_gripper_robotiq_85_left_finger_tip_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_wrist_3_link" link2="rbkairos_gripper_robotiq_85_right_finger_tip_link" reason="Never"/>
+
+  <disable_collisions link1="rbkairos_arm_flange" link2="rbkairos_gripper_base_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_flange" link2="rbkairos_gripper_robotiq_85_base_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_flange" link2="rbkairos_gripper_robotiq_85_left_knuckle_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_flange" link2="rbkairos_gripper_robotiq_85_right_knuckle_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_flange" link2="rbkairos_gripper_robotiq_85_left_finger_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_flange" link2="rbkairos_gripper_robotiq_85_right_finger_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_flange" link2="rbkairos_gripper_robotiq_85_left_inner_knuckle_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_flange" link2="rbkairos_gripper_robotiq_85_right_inner_knuckle_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_flange" link2="rbkairos_gripper_robotiq_85_left_finger_tip_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_flange" link2="rbkairos_gripper_robotiq_85_right_finger_tip_link" reason="Never"/>
+
+  <disable_collisions link1="rbkairos_arm_tool0" link2="rbkairos_gripper_base_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_tool0" link2="rbkairos_gripper_robotiq_85_base_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_tool0" link2="rbkairos_gripper_robotiq_85_left_knuckle_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_tool0" link2="rbkairos_gripper_robotiq_85_right_knuckle_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_tool0" link2="rbkairos_gripper_robotiq_85_left_finger_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_tool0" link2="rbkairos_gripper_robotiq_85_right_finger_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_tool0" link2="rbkairos_gripper_robotiq_85_left_inner_knuckle_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_tool0" link2="rbkairos_gripper_robotiq_85_right_inner_knuckle_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_tool0" link2="rbkairos_gripper_robotiq_85_left_finger_tip_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_tool0" link2="rbkairos_gripper_robotiq_85_right_finger_tip_link" reason="Never"/>
+
+  <disable_collisions link1="rbkairos_arm_wrist_2_link" link2="rbkairos_gripper_base_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_wrist_2_link" link2="rbkairos_gripper_robotiq_85_base_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_wrist_2_link" link2="rbkairos_gripper_robotiq_85_left_knuckle_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_wrist_2_link" link2="rbkairos_gripper_robotiq_85_right_knuckle_link" reason="Never"/>
+
+  <!-- Arm shoulder to base parts (never reach) -->
+  <disable_collisions link1="rbkairos_arm_shoulder_link" link2="rbkairos_top_cover" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_shoulder_link" link2="rbkairos_base_link" reason="Never"/>
+  <disable_collisions link1="rbkairos_arm_shoulder_link" link2="rbkairos_arm_base_link_inertia" reason="Never"/>
+
+</robot>
