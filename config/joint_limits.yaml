@@ -1,0 +1,61 @@
+# Joint limits for MoveIt planning
+# These override URDF limits for smoother/safer planning
+#
+# NOTE: UR5e has ±360° on most joints which causes the planner to find
+# weird paths (going "the long way around"). We restrict position limits
+# to ±180° (±π) to get more direct paths.
+
+joint_limits:
+  rbkairos_arm_shoulder_pan_joint:
+    has_velocity_limits: true
+    max_velocity: 2.0943  # rad/s (120 deg/s)
+    has_acceleration_limits: true
+    max_acceleration: 2.5
+    has_position_limits: true
+    min_position: -3.1416  # -180 deg
+    max_position: 3.1416   # +180 deg
+  rbkairos_arm_shoulder_lift_joint:
+    has_velocity_limits: true
+    max_velocity: 2.0943
+    has_acceleration_limits: true
+    max_acceleration: 2.5
+    has_position_limits: true
+    min_position: -3.1416
+    max_position: 3.1416
+  rbkairos_arm_elbow_joint:
+    has_velocity_limits: true
+    max_velocity: 3.1416  # rad/s (180 deg/s)
+    has_acceleration_limits: true
+    max_acceleration: 2.5
+    has_position_limits: true
+    min_position: -3.1416
+    max_position: 3.1416
+  rbkairos_arm_wrist_1_joint:
+    has_velocity_limits: true
+    max_velocity: 3.1416
+    has_acceleration_limits: true
+    max_acceleration: 2.5
+    has_position_limits: true
+    min_position: -3.1416
+    max_position: 3.1416
+  rbkairos_arm_wrist_2_joint:
+    has_velocity_limits: true
+    max_velocity: 3.1416
+    has_acceleration_limits: true
+    max_acceleration: 2.5
+    has_position_limits: true
+    min_position: -3.1416
+    max_position: 3.1416
+  rbkairos_arm_wrist_3_joint:
+    has_velocity_limits: true
+    max_velocity: 3.1416
+    has_acceleration_limits: true
+    max_acceleration: 2.5
+    has_position_limits: true
+    min_position: -3.1416
+    max_position: 3.1416
+  rbkairos_gripper_robotiq_85_left_knuckle_joint:
+    has_velocity_limits: true
+    max_velocity: 1.0
+    has_acceleration_limits: true
+    max_acceleration: 1.0

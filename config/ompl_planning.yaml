@@ -1,0 +1,87 @@
+# OMPL Planning configuration for ROS 2 Humble MoveIt2
+# This configures the OMPL planning pipeline
+
+planning_plugin: "ompl_interface/OMPLPlanner"
+
+# Request adapters - Time parameterization MUST be first
+# FixStartStatePathConstraints added to match Panda config
+request_adapters: >-
+  default_planner_request_adapters/AddTimeOptimalParameterization
+  default_planner_request_adapters/ResolveConstraintFrames
+  default_planner_request_adapters/FixWorkspaceBounds
+  default_planner_request_adapters/FixStartStateBounds
+  default_planner_request_adapters/FixStartStateCollision
+  default_planner_request_adapters/FixStartStatePathConstraints
+
+start_state_max_bounds_error: 0.1
+
+# Path simplification settings - reduces unnecessary motions
+simplify_solutions: true
+use_constraints_approximations: true
+
+# Planner configs for the arm planning group
+planner_configs:
+  RRTConnect:
+    type: geometric::RRTConnect
+    range: 0.0
+  RRTstar:
+    type: geometric::RRTstar
+    range: 0.0
+    goal_bias: 0.05
+    delay_collision_checking: 1
+  RRT:
+    type: geometric::RRT
+    range: 0.0
+    goal_bias: 0.05
+  PRM:
+    type: geometric::PRM
+    max_nearest_neighbors: 10
+  PRMstar:
+    type: geometric::PRMstar
+  EST:
+    type: geometric::EST
+    range: 0.0
+    goal_bias: 0.05
+  LBKPIECE:
+    type: geometric::LBKPIECE
+    range: 0.0
+    border_fraction: 0.9
+    min_valid_path_fraction: 0.5
+  BKPIECE:
+    type: geometric::BKPIECE
+    range: 0.0
+    border_fraction: 0.9
+    failed_expansion_score_factor: 0.5
+    min_valid_path_fraction: 0.5
+  KPIECE:
+    type: geometric::KPIECE
+    range: 0.0
+    goal_bias: 0.05
+    border_fraction: 0.9
+    failed_expansion_score_factor: 0.5
+    min_valid_path_fraction: 0.5
+
+# Group-specific settings
+arm:
+  # RRTConnect is fast but finds ANY path, not optimal
+  # RRTstar finds progressively better paths but slower
+  # For better paths: increase planning time in RViz or use RRTstar
+  default_planner_config: RRTConnect
+  planner_configs:
+    - RRTConnect
+    - RRTstar
+    - RRT
+    - PRM
+    - PRMstar
+    - EST
+    - LBKPIECE
+    - BKPIECE
+    - KPIECE
+  projection_evaluator: joints(rbkairos_arm_shoulder_pan_joint,rbkairos_arm_shoulder_lift_joint)
+  # Increase from 0.005 to allow coarser but smoother paths
+  longest_valid_segment_fraction: 0.01
+
+gripper:
+  default_planner_config: RRTConnect
+  planner_configs:
+    - RRTConnect
