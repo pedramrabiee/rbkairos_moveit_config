@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>ur5e_robotiq_moveit_config</name>
-  <version>0.1.0</version>
-  <description>MoveIt config for UR5e + Robotiq 2F-85 (Setup Assistant style)</description>
+  <name>rbkairos_moveit_config</name>
+  <version>0.2.0</version>
+  <description>MoveIt config for RB-Kairos+ (UR5e + Robotiq 2F-85) - Panda-style with prefix support</description>
   <maintainer email="prabiee@3laws.io">Pedram Rabiee</maintainer>
   <license>BSD-3-Clause</license>
 

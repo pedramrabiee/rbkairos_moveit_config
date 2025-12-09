@@ -8,38 +8,87 @@ default_acceleration_scaling_factor: 0.1
 
 # Specific joint properties can be changed with the keys [max_position, min_position, max_velocity, max_acceleration]
 # Joint limits can be turned off with [has_velocity_limits, has_acceleration_limits]
+#
+# Note: Joint names must match what's used in the URDF/SRDF.
+# - For standalone/real robot: shoulder_pan_joint, etc.
+# - For Gazebo simulation with prefixes: rbkairos_arm_shoulder_pan_joint, etc.
+#
+# Acceleration limits are REQUIRED for proper trajectory timing.
+# Without them, Time Optimal Trajectory Generation (TOTG) cannot compute valid trajectories.
+# The UR5e acceleration limits below are based on UR documentation.
+
 joint_limits:
+  # UR5e arm joints (no prefix - standalone/real robot)
   shoulder_pan_joint:
     has_velocity_limits: true
     max_velocity: 2.0943
-    has_acceleration_limits: false
-    max_acceleration: 0
+    has_acceleration_limits: true
+    max_acceleration: 2.5
   shoulder_lift_joint:
     has_velocity_limits: true
     max_velocity: 2.0943
-    has_acceleration_limits: false
-    max_acceleration: 0
+    has_acceleration_limits: true
+    max_acceleration: 2.5
   elbow_joint:
     has_velocity_limits: true
     max_velocity: 3.1416
-    has_acceleration_limits: false
-    max_acceleration: 0
+    has_acceleration_limits: true
+    max_acceleration: 2.5
   wrist_1_joint:
     has_velocity_limits: true
     max_velocity: 3.1416
-    has_acceleration_limits: false
-    max_acceleration: 0
+    has_acceleration_limits: true
+    max_acceleration: 2.5
   wrist_2_joint:
     has_velocity_limits: true
     max_velocity: 3.1416
-    has_acceleration_limits: false
-    max_acceleration: 0
+    has_acceleration_limits: true
+    max_acceleration: 2.5
   wrist_3_joint:
     has_velocity_limits: true
     max_velocity: 3.1416
+    has_acceleration_limits: true
+    max_acceleration: 2.5
+  # Gripper (no prefix)
+  gripper_robotiq_85_left_knuckle_joint:
+    has_velocity_limits: true
+    max_velocity: 0.5
     has_acceleration_limits: false
     max_acceleration: 0
-  gripper_robotiq_85_left_knuckle_joint:
+
+  # UR5e arm joints (rbkairos_arm_ prefix - Gazebo simulation)
+  rbkairos_arm_shoulder_pan_joint:
+    has_velocity_limits: true
+    max_velocity: 2.0943
+    has_acceleration_limits: true
+    max_acceleration: 2.5
+  rbkairos_arm_shoulder_lift_joint:
+    has_velocity_limits: true
+    max_velocity: 2.0943
+    has_acceleration_limits: true
+    max_acceleration: 2.5
+  rbkairos_arm_elbow_joint:
+    has_velocity_limits: true
+    max_velocity: 3.1416
+    has_acceleration_limits: true
+    max_acceleration: 2.5
+  rbkairos_arm_wrist_1_joint:
+    has_velocity_limits: true
+    max_velocity: 3.1416
+    has_acceleration_limits: true
+    max_acceleration: 2.5
+  rbkairos_arm_wrist_2_joint:
+    has_velocity_limits: true
+    max_velocity: 3.1416
+    has_acceleration_limits: true
+    max_acceleration: 2.5
+  rbkairos_arm_wrist_3_joint:
+    has_velocity_limits: true
+    max_velocity: 3.1416
+    has_acceleration_limits: true
+    max_acceleration: 2.5
+  # Gripper (rbkairos_gripper_ prefix - Gazebo simulation)
+  rbkairos_gripper_robotiq_85_left_knuckle_joint:
     has_velocity_limits: true
     max_velocity: 0.5
     has_acceleration_limits: false
