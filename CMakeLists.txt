@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.8)
-project(rbkairos_moveit_config)
+project(ur5e_robotiq_moveit_config)
 
 find_package(ament_cmake REQUIRED)
 
-install(DIRECTORY config srdf launch DESTINATION share/${PROJECT_NAME})
+install(DIRECTORY config launch DESTINATION share/${PROJECT_NAME})
 
 ament_package()
