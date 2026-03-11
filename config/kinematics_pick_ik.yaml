@@ -1,0 +1,15 @@
+# pick_ik - Gradient-based IK solver with global random restarts
+# Good balance of speed and solution quality. Handles singularities well.
+# Requires: ros-humble-pick-ik (apt) or pick_ik (source)
+#
+# Author: Pedram Rabiee (prabiee@3laws.io)
+# Copyright: 2025 3Laws Robotics Inc.
+
+ur5e_arm:
+  kinematics_solver: pick_ik/PickIkPlugin
+  kinematics_solver_search_resolution: 0.005
+  kinematics_solver_timeout: 0.05
+  mode: global
+  rotation_scale: 0.5
+  position_threshold: 0.001
+  orientation_threshold: 0.01

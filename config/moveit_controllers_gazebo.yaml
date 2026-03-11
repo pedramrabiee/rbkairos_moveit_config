@@ -1,0 +1,37 @@
+# MoveIt controller configuration for Gazebo simulation
+# Uses Gazebo controller names and prefixed joint names (rbkairos_arm_*, rbkairos_gripper_*)
+#
+# Author: Pedram Rabiee (prabiee@3laws.io)
+# Copyright: 2025 3Laws Robotics Inc.
+
+trajectory_execution:
+  allowed_execution_duration_scaling: 4.0
+  allowed_goal_duration_margin: 5.0
+  allowed_start_tolerance: 0.01
+  trajectory_duration_monitoring: true
+
+moveit_controller_manager: moveit_simple_controller_manager/MoveItSimpleControllerManager
+
+moveit_simple_controller_manager:
+  controller_names:
+    - joint_trajectory_controller
+    - gripper_controller
+
+  joint_trajectory_controller:
+    type: FollowJointTrajectory
+    joints:
+      - rbkairos_arm_shoulder_pan_joint
+      - rbkairos_arm_shoulder_lift_joint
+      - rbkairos_arm_elbow_joint
+      - rbkairos_arm_wrist_1_joint
+      - rbkairos_arm_wrist_2_joint
+      - rbkairos_arm_wrist_3_joint
+    action_ns: follow_joint_trajectory
+    default: true
+
+  gripper_controller:
+    type: GripperCommand
+    joints:
+      - rbkairos_gripper_robotiq_85_left_knuckle_joint
+    action_ns: gripper_cmd
+    default: true

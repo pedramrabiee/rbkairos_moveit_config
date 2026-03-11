@@ -1,0 +1,11 @@
+# KDL (Kinematics and Dynamics Library) - Numerical IK solver
+# Default solver, always available. Good general-purpose solver.
+# Slower than analytical solvers but works for any robot.
+#
+# Author: Pedram Rabiee (prabiee@3laws.io)
+# Copyright: 2025 3Laws Robotics Inc.
+
+ur5e_arm:
+  kinematics_solver: kdl_kinematics_plugin/KDLKinematicsPlugin
+  kinematics_solver_search_resolution: 0.005
+  kinematics_solver_timeout: 0.05
