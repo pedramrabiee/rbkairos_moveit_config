@@ -1,0 +1,55 @@
+# ros2_control configuration for Gazebo simulation (bridge-side)
+#
+# This config is used by the ros2_control_node launched from the autonomy stack
+# (move_group.launch.py). It runs the TrajectoryVelocityBridge hardware plugin
+# which reads joint states from a topic and publishes velocity commands to a topic.
+#
+# The joint_trajectory_controller here converts MoveIt trajectories (position targets)
+# into velocity commands via PID, which are then published by the bridge to the
+# forward_velocity_controller in Gazebo.
+#
+# Author: Pedram Rabiee (prabiee@3laws.io)
+# Copyright: 2025 3Laws Robotics Inc.
+
+controller_manager:
+  ros__parameters:
+    update_rate: 120
+
+    joint_trajectory_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+/**:
+  ros__parameters:
+    command_interfaces:
+      - velocity
+    state_interfaces:
+      - position
+      - velocity
+    joints:
+      - rbkairos_arm_shoulder_pan_joint
+      - rbkairos_arm_shoulder_lift_joint
+      - rbkairos_arm_elbow_joint
+      - rbkairos_arm_wrist_1_joint
+      - rbkairos_arm_wrist_2_joint
+      - rbkairos_arm_wrist_3_joint
+
+    constraints:
+      goal_time: 0.0
+      stopped_velocity_tolerance: 0.02
+      rbkairos_arm_shoulder_pan_joint:  {trajectory: 0.0, goal: 0.02}
+      rbkairos_arm_shoulder_lift_joint: {trajectory: 0.0, goal: 0.02}
+      rbkairos_arm_elbow_joint:         {trajectory: 0.0, goal: 0.02}
+      rbkairos_arm_wrist_1_joint:       {trajectory: 0.0, goal: 0.02}
+      rbkairos_arm_wrist_2_joint:       {trajectory: 0.0, goal: 0.02}
+      rbkairos_arm_wrist_3_joint:       {trajectory: 0.0, goal: 0.02}
+
+    gains:
+      rbkairos_arm_shoulder_pan_joint:  {p: 0.4, i: 0.01, d: 0.05, ff_velocity_scale: 1.0}
+      rbkairos_arm_shoulder_lift_joint: {p: 0.4, i: 0.01, d: 0.05, ff_velocity_scale: 1.0}
+      rbkairos_arm_elbow_joint:         {p: 0.4, i: 0.01, d: 0.05, ff_velocity_scale: 1.0}
+      rbkairos_arm_wrist_1_joint:       {p: 0.4, i: 0.01, d: 0.05, ff_velocity_scale: 1.0}
+      rbkairos_arm_wrist_2_joint:       {p: 0.4, i: 0.01, d: 0.05, ff_velocity_scale: 1.0}
+      rbkairos_arm_wrist_3_joint:       {p: 0.4, i: 0.01, d: 0.05, ff_velocity_scale: 1.0}

@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<!--
+  Bridge URDF for rbkairos Gazebo simulation.
+
+  Includes the same robot model as the sim URDF but replaces gz_ros2_control with
+  TrajectoryVelocityBridge. This URDF is loaded by the autonomy stack's ros2_control_node
+  (launched from move_group.launch.py). The bridge reads joint states from a topic and
+  publishes velocity commands to a topic, enabling supervisor interception via topic remap.
+
+  Author: Pedram Rabiee (prabiee@3laws.io)
+  Copyright: 2025 3Laws Robotics Inc.
+-->
+<robot name="rbkairos_bridge" xmlns:xacro="http://wiki.ros.org/xacro">
+
+  <xacro:arg name="namespace" default="rbkairos" />
+  <xacro:arg name="prefix" default="rbkairos_" />
+  <xacro:arg name="ur_type" default="ur5e" />
+  <xacro:arg name="use_gripper" default="true" />
+  <xacro:arg name="gripper_type" default="robotiq_2f_85" />
+  <xacro:arg name="joint_states_topic" default="/rbkairos/joint_states" />
+  <xacro:arg name="velocity_command_topic" default="/rbkairos/forward_velocity_controller/commands" />
+
+  <!-- Include base RB-Kairos+ with UR5e (gazebo_ignition=false to skip gz_ros2_control) -->
+  <xacro:include filename="$(find robotnik_description)/robots/rbkairos/rbkairos_plus.urdf.xacro" />
+
+  <!-- Include Robotiq gripper (no ros2_control since sim_ignition=false) -->
+  <xacro:if value="$(arg use_gripper)">
+    <xacro:include filename="$(find robotiq_description)/urdf/ur_to_robotiq_adapter.urdf.xacro" />
+
+    <xacro:if value="${'$(arg gripper_type)' == 'robotiq_2f_85'}">
+      <xacro:include filename="$(find robotiq_description)/urdf/robotiq_2f_85_macro.urdf.xacro" />
+    </xacro:if>
+    <xacro:if value="${'$(arg gripper_type)' == 'robotiq_2f_140'}">
+      <xacro:include filename="$(find robotiq_description)/urdf/robotiq_2f_140_macro.urdf.xacro" />
+    </xacro:if>
+
+    <xacro:ur_to_robotiq
+      parent="$(arg prefix)arm_tool0"
+      child="$(arg prefix)gripper_base_link"
+      prefix="$(arg prefix)gripper_adapter_" />
+
+    <xacro:if value="${'$(arg gripper_type)' == 'robotiq_2f_85'}">
+      <xacro:robotiq_gripper
+        name="$(arg namespace)_gripper"
+        parent="$(arg prefix)gripper_base_link"
+        prefix="$(arg prefix)gripper_"
+        sim_ignition="false"
+        include_ros2_control="false"
+        use_fake_hardware="false">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:robotiq_gripper>
+    </xacro:if>
+
+    <xacro:if value="${'$(arg gripper_type)' == 'robotiq_2f_140'}">
+      <xacro:robotiq_gripper
+        name="$(arg namespace)_gripper"
+        parent="$(arg prefix)gripper_base_link"
+        prefix="$(arg prefix)gripper_"
+        sim_ignition="false"
+        include_ros2_control="false"
+        use_fake_hardware="false">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:robotiq_gripper>
+    </xacro:if>
+  </xacro:if>
+
+  <!-- TrajectoryVelocityBridge: reads joint states from topic, publishes velocity to topic -->
+  <ros2_control name="arm_bridge" type="system">
+    <hardware>
+      <plugin>lll_moveit/TrajectoryVelocityBridge</plugin>
+      <param name="joint_states_topic">$(arg joint_states_topic)</param>
+      <param name="velocity_command_topic">$(arg velocity_command_topic)</param>
+    </hardware>
+    <joint name="rbkairos_arm_shoulder_pan_joint">
+      <command_interface name="velocity" />
+      <state_interface name="position" />
+      <state_interface name="velocity" />
+    </joint>
+    <joint name="rbkairos_arm_shoulder_lift_joint">
+      <command_interface name="velocity" />
+      <state_interface name="position" />
+      <state_interface name="velocity" />
+    </joint>
+    <joint name="rbkairos_arm_elbow_joint">
+      <command_interface name="velocity" />
+      <state_interface name="position" />
+      <state_interface name="velocity" />
+    </joint>
+    <joint name="rbkairos_arm_wrist_1_joint">
+      <command_interface name="velocity" />
+      <state_interface name="position" />
+      <state_interface name="velocity" />
+    </joint>
+    <joint name="rbkairos_arm_wrist_2_joint">
+      <command_interface name="velocity" />
+      <state_interface name="position" />
+      <state_interface name="velocity" />
+    </joint>
+    <joint name="rbkairos_arm_wrist_3_joint">
+      <command_interface name="velocity" />
+      <state_interface name="position" />
+      <state_interface name="velocity" />
+    </joint>
+  </ros2_control>
+
+</robot>
